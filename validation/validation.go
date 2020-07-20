@@ -1,8 +1,6 @@
-package domain
+package validation
 
-import (
-	"errors"
-)
+import "errors"
 
 var formats = map[string][]string{
 	"BE": {"####"},
