@@ -1,4 +1,4 @@
-package domain
+package validation
 
 type formatsTest struct {
 	desc      string
