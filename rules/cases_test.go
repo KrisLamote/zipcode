@@ -34,4 +34,12 @@ var addCases = []AddTest{
 		expectRules: []string{},
 		expectErr:   true,
 	},
+	{
+		desc:        "Country codes should be ASCII",
+		country:     "Å",
+		rules:       []string{},
+		addRules:    []string{},
+		expectRules: []string{},
+		expectErr:   true,
+	},
 }
