@@ -43,3 +43,25 @@ var addCases = []AddTest{
 		expectErr:   true,
 	},
 }
+
+type DeleteTest struct {
+	desc      string
+	rules     Rules
+	country   string
+	expectErr bool
+}
+
+var delCases = []DeleteTest{
+	{
+		desc:      "Delete existing country",
+		rules:     Rules{"BE": {"####"}},
+		country:   "BE",
+		expectErr: false,
+	},
+	{
+		desc:      "Delete non-existing country",
+		rules:     Rules{"SK": {"## ###"}},
+		country:   "BE",
+		expectErr: true,
+	},
+}
