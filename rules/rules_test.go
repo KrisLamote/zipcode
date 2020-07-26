@@ -5,6 +5,33 @@ import (
 	"testing"
 )
 
+func TestFormats(t *testing.T) {
+	t.Parallel()
+	e := New(Rules{
+		"BE": []string{"####"},
+		"BR": []string{"#####-###", "#####"},
+		"SK": []string{"## ###"},
+	})
+	for _, test := range formatsCases {
+		formats, err := e.Formats(test.country)
+		if !test.expectErr {
+			// dont expect an error, but we got one
+			if err != nil {
+				t.Errorf("FAIL: '%s'\nFormat(%s)\n  expected no error\n  received error: %s", test.desc, test.country, err)
+			}
+			// format is wrong
+			if !reflect.DeepEqual(formats, test.formats) {
+				t.Errorf("FAIL: '%s'\nFormat(%s)\n  expected formats: %s\n  received formats: %s", test.desc, test.country, test.formats, formats)
+			}
+		} else if err == nil {
+			t.Errorf("FAIL: '%s'\nFormat(%s)\n  expected an error, but error is nil", test.desc, test.country)
+		}
+		if !reflect.DeepEqual(formats, test.formats) {
+			t.Errorf("FAIL: '%s'\nFormats(%s)\n  expected formats: %s\n  received formats: %s", test.desc, test.country, test.formats, formats)
+		}
+	}
+}
+
 func TestAdd(t *testing.T) {
 	for _, test := range addCases {
 		var rules map[string][]string

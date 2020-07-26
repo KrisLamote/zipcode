@@ -1,33 +1,5 @@
 package validation
 
-type formatsTest struct {
-	desc      string
-	country   string
-	formats   []string
-	expectErr bool
-}
-
-var formatsCases = []formatsTest{
-	{
-		desc:      "BE format",
-		country:   "BE",
-		formats:   []string{"####"},
-		expectErr: false,
-	},
-	{
-		desc:      "SK format",
-		country:   "SK",
-		formats:   []string{"## ###"},
-		expectErr: false,
-	},
-	{
-		desc:      "Unknown country code",
-		country:   "XX",
-		formats:   []string{""},
-		expectErr: true,
-	},
-}
-
 type validationTest struct {
 	desc     string
 	zipcode  string

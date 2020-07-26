@@ -1,5 +1,33 @@
 package rules
 
+type formatsTest struct {
+	desc      string
+	country   string
+	formats   []string
+	expectErr bool
+}
+
+var formatsCases = []formatsTest{
+	{
+		desc:      "BE format",
+		country:   "BE",
+		formats:   []string{"####"},
+		expectErr: false,
+	},
+	{
+		desc:      "SK format",
+		country:   "SK",
+		formats:   []string{"## ###"},
+		expectErr: false,
+	},
+	{
+		desc:      "Unknown country code",
+		country:   "XX",
+		formats:   []string{""},
+		expectErr: true,
+	},
+}
+
 type AddTest struct {
 	desc        string
 	rules       Rules
