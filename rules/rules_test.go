@@ -9,8 +9,7 @@ func TestAdd(t *testing.T) {
 	for _, test := range addCases {
 		var rules map[string][]string
 		if len(test.rules) > 0 {
-			rules = make(map[string][]string, 0)
-			rules[test.country] = test.rules
+			rules = test.rules
 		} else {
 			rules = map[string][]string{}
 		}

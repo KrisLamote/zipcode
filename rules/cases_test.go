@@ -2,8 +2,8 @@ package rules
 
 type AddTest struct {
 	desc        string
+	rules       Rules
 	country     string
-	rules       []string
 	addRules    []string
 	expectRules []string
 	expectErr   bool
@@ -12,32 +12,32 @@ type AddTest struct {
 var addCases = []AddTest{
 	{
 		desc:        "Add to an empty engine should insert country and rules",
+		rules:       Rules{},
 		country:     "BE",
-		rules:       []string{},
 		addRules:    []string{"####"},
 		expectRules: []string{"####"},
 		expectErr:   false,
 	},
 	{
 		desc:        "Append to existing country rules",
+		rules:       Rules{"BR": {"#####-###"}},
 		country:     "BR",
-		rules:       []string{"#####-###"},
 		addRules:    []string{"#####"},
 		expectRules: []string{"#####-###", "#####"},
 		expectErr:   false,
 	},
 	{
 		desc:        "Country codes should be length 2",
+		rules:       Rules{},
 		country:     "ABC",
-		rules:       []string{},
 		addRules:    []string{},
 		expectRules: []string{},
 		expectErr:   true,
 	},
 	{
 		desc:        "Country codes should be ASCII",
+		rules:       Rules{},
 		country:     "Å",
-		rules:       []string{},
 		addRules:    []string{},
 		expectRules: []string{},
 		expectErr:   true,
