@@ -1,12 +1,8 @@
 package validation
 
-import "errors"
-
-var formats = map[string][]string{
-	"BE": {"####"},
-	"BR": {"#####-###", "#####"},
-	"SK": {"## ###"},
-}
+import (
+	"github.com/KrisLamote/zipcode/rules"
+)
 
 const (
 	zero = '0'
@@ -14,18 +10,9 @@ const (
 	hash = '#'
 )
 
-// Formats gives the known formats for the given country
-func Formats(cntr string) ([]string, error) {
-	f, found := formats[cntr]
-	if !found {
-		return []string{""}, errors.New("country not found")
-	}
-	return f, nil
-}
-
 // Valid checks whether a zipcode is valid for the given country
-func Valid(zip string, cntr string) bool {
-	fs, err := Formats(cntr)
+func Valid(e *rules.Engine, zip string, cntr string) bool {
+	fs, err := e.Formats(cntr)
 	if err != nil {
 		return false
 	}

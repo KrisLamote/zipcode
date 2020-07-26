@@ -16,6 +16,27 @@ type Engine struct {
 	rules Rules
 }
 
+// Empty intialises a new empty Engine
+func Empty() *Engine {
+	e := &Engine{rules: map[string][]string{}}
+	return e
+}
+
+// New intialises a new Engine
+func New(r Rules) *Engine {
+	e := &Engine{rules: r}
+	return e
+}
+
+// Formats gives the known formats for the given country
+func (e *Engine) Formats(cntr string) ([]string, error) {
+	f, found := e.rules[cntr]
+	if !found {
+		return []string{""}, errors.New("country not found")
+	}
+	return f, nil
+}
+
 // Add format rules to the given country. If the country doesn't exist, add it.
 // Cntr needs to be 2 string, preferably representing an iso country code.
 func (e *Engine) Add(cntr string, formats []string) error {
