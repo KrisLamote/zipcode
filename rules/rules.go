@@ -2,6 +2,7 @@ package rules
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 )
 
@@ -33,5 +34,15 @@ func (e *Engine) Add(cntr string, formats []string) error {
 	}
 
 	e.rules[cntr] = append(f, formats...)
+	return nil
+}
+
+// Delete all format rules to the given country.
+func (e *Engine) Delete(cntr string) error {
+	_, found := e.rules[cntr]
+	if !found {
+		return fmt.Errorf("the country code not found (%v)", cntr)
+	}
+	delete(e.rules, cntr)
 	return nil
 }
