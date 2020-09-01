@@ -8,8 +8,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
+	"github.com/KrisLamote/zipcode/internal"
 	"github.com/ardanlabs/conf"
 	"github.com/pkg/errors"
 )
@@ -30,13 +30,7 @@ func run(log *log.Logger) error {
 	// =========================================================================
 	// Configuration
 
-	var cfg struct {
-		conf.Version
-		API struct {
-			Host    string        `conf:"default:localhost:3000"`
-			Timeout time.Duration `conf:"default:5s"`
-		}
-	}
+	var cfg internal.Config
 	cfg.Version.SVN = build
 	cfg.Version.Desc = "copyright information here"
 
@@ -79,7 +73,7 @@ func run(log *log.Logger) error {
 	http.HandleFunc("/", hello)
 
 	go func() {
-		http.ListenAndServe("localhost:3000", nil)
+		http.ListenAndServe(cfg.API.Host, nil)
 	}()
 
 	// =========================================================================
@@ -91,7 +85,7 @@ func run(log *log.Logger) error {
 		log.Printf("main : %v : starting shutdown", sig)
 
 		// Give outstanding requests a deadline for completion.
-		_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		_, cancel := context.WithTimeout(context.Background(), cfg.API.Timeout)
 		defer cancel()
 
 		// Log the status of this shutdown.
