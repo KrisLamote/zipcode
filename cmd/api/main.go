@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -70,10 +69,9 @@ func run(log *log.Logger) error {
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
 
-	http.HandleFunc("/", hello)
-
+	a := internal.NewApp(cfg, log)
 	go func() {
-		http.ListenAndServe(cfg.API.Host, nil)
+		a.Run()
 	}()
 
 	// =========================================================================
@@ -95,8 +93,4 @@ func run(log *log.Logger) error {
 	}
 
 	return nil
-}
-
-func hello(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "hello zipcode")
 }
