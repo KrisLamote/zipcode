@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -18,6 +17,7 @@ type App struct {
 // NewApp ..
 func NewApp(cfg Config, log *log.Logger) *App {
 	r := mux.NewRouter()
+	r.NotFoundHandler = http.HandlerFunc(notFound)
 	r.HandleFunc("/", hello).Methods("GET")
 
 	a := &App{
@@ -42,5 +42,13 @@ func (a *App) Shutdown() error {
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "hello zipcode")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("hello zipcode"))
+}
+
+func notFound(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotFound)
+	w.Write([]byte("route not found"))
 }
