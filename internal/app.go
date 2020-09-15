@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -14,10 +15,19 @@ type App struct {
 	rtr *mux.Router
 }
 
+// structure for a response to a validation or format request
+type response struct {
+	Country string `json:"country"`
+	Format  string `json:"format"`
+	Valid   bool   `json:"valid"`
+}
+
 // NewApp ..
 func NewApp(cfg Config, log *log.Logger) *App {
 	r := mux.NewRouter()
 	r.NotFoundHandler = http.HandlerFunc(notFound)
+	r.HandleFunc("/validate", validate).Methods("GET")
+	r.HandleFunc("/format", validate).Methods("GET")
 	r.HandleFunc("/", hello).Methods("GET")
 
 	a := &App{
@@ -41,14 +51,26 @@ func (a *App) Shutdown() error {
 	return nil
 }
 
+func notFound(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotFound)
+	w.Write([]byte("route not found"))
+}
+
 func hello(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("hello zipcode"))
 }
 
-func notFound(w http.ResponseWriter, r *http.Request) {
+func validate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte("route not found"))
+
+	body, err := json.Marshal(response{Country: "BE", Format: "3000", Valid: true})
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(body)
 }
