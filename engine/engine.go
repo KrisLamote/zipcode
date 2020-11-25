@@ -8,9 +8,6 @@ import (
 
 var reg = regexp.MustCompile("[^a-zA-Z]+")
 
-// Rules maps a country code to a slice of formatting rules
-type Rules = map[string][]string
-
 // Engine holds the rules
 type Engine struct {
 	rules Rules
