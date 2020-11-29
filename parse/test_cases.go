@@ -4,36 +4,36 @@ import "github.com/KrisLamote/zipcode/engine"
 
 type parseTest struct {
 	desc  string
-	yaml  string
+	yaml  []byte
 	rules engine.Rules
 }
 
 var parseCases = []parseTest{
 	{
 		desc:  "empty file",
-		yaml:  "",
+		yaml:  []byte(""),
 		rules: map[string][]string{},
 	},
 	{
 		desc:  "Belgium",
-		yaml:  "BE:\n- \"####\"",
+		yaml:  []byte("BE:\n- \"####\""),
 		rules: map[string][]string{"BE": {"####"}},
 	},
 	{
 		desc:  "Brasil",
-		yaml:  "BR:\n- \"#####-###\"\n- \"#####\"",
+		yaml:  []byte("BR:\n- \"#####-###\"\n- \"#####\""),
 		rules: map[string][]string{"BR": {"#####-###", "#####"}},
 	},
 	{
 		desc:  "Multiple countries with multiple rules",
-		yaml:  "BE:\n- \"####\"\nBR:\n- \"#####-###\"\n- \"#####\"",
+		yaml:  []byte("BE:\n- \"####\"\nBR:\n- \"#####-###\"\n- \"#####\""),
 		rules: map[string][]string{"BE": {"####"}, "BR": {"#####-###", "#####"}},
 	},
 }
 
 type errorTest struct {
 	desc      string
-	yaml      string
+	yaml      []byte
 	yamlError bool
 	ownError  string
 }
@@ -43,13 +43,13 @@ type errorTest struct {
 var errorCases = []errorTest{
 	{
 		desc:      "Yalm error",
-		yaml:      "just a string",
+		yaml:      []byte("just a string"),
 		yamlError: true,
 		ownError:  "",
 	},
 	{
 		desc:      "doesnt fit in the Rules type",
-		yaml:      "A: [B: [2]]",
+		yaml:      []byte("A: [B: [2]]"),
 		yamlError: true,
 		ownError:  "",
 	},
