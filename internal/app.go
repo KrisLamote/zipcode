@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/KrisLamote/zipcode/engine"
-	"github.com/KrisLamote/zipcode/parse"
+	"github.com/KrisLamote/zipcode/yaml"
 	"github.com/gorilla/mux"
 )
 
@@ -41,7 +41,7 @@ func NewApp(cfg Config, log *log.Logger) *App {
 		data = []byte("BE: [\"####\"]\nBR: [\"#####-###\", \"#####\"]\nSK: [\"## ###\"]")
 	}
 
-	rules, err := parse.Parse(data)
+	rules, err := yaml.Parse(data)
 	if err != nil {
 		log.Printf("api : config failed reading rules any rules, error: %s\n", err)
 		os.Exit(1)

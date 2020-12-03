@@ -1,4 +1,4 @@
-package parse
+package yaml
 
 import "github.com/KrisLamote/zipcode/engine"
 
