@@ -2,10 +2,13 @@ package internal
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/KrisLamote/zipcode/engine"
+	"github.com/KrisLamote/zipcode/yaml"
 	"github.com/gorilla/mux"
 )
 
@@ -32,13 +35,21 @@ type response struct {
 
 // NewApp ..
 func NewApp(cfg Config, log *log.Logger) *App {
+	data, err := ioutil.ReadFile("../../data/rules.yml")
+	if err != nil {
+		log.Printf("api : config failed reading rules from yml, error: %s\n", err)
+		data = []byte("BE: [\"####\"]\nBR: [\"#####-###\", \"#####\"]\nSK: [\"## ###\"]")
+	}
+
+	rules, err := yaml.Parse(data)
+	if err != nil {
+		log.Printf("api : config failed reading rules any rules, error: %s\n", err)
+		os.Exit(1)
+	}
+
 	a := &App{
 		cfg: cfg,
-		eng: engine.New(engine.Rules{
-			"BE": []string{"####"},
-			"BR": []string{"#####-###", "#####"},
-			"SK": []string{"## ###"},
-		}),
+		eng: engine.New(rules),
 		log: log,
 	}
 
